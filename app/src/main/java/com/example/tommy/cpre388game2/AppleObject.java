@@ -16,8 +16,4 @@ public class AppleObject extends GameCharacter {
         arr.add(new Pair(x, y));
         return arr;
     }
-
-    public boolean move(int x, int y) {
-        return false;
-    }
 }

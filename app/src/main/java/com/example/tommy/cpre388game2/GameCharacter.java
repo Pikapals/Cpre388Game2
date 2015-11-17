@@ -20,6 +20,4 @@ public abstract class GameCharacter {
 
     public abstract ArrayList<Pair> drawToBoard();
 
-    public abstract boolean move(int x, int y);
-
 }

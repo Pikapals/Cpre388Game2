@@ -8,6 +8,14 @@ import java.util.ArrayList;
 public class SnakeCharacter extends GameCharacter{
     ArrayList<Pair> pixels;
     private boolean eaten;
+    private Direction dir;
+
+    public enum Direction {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT
+    }
 
     public SnakeCharacter() {
         super(16, 16, 0, 0, 1);
@@ -15,9 +23,36 @@ public class SnakeCharacter extends GameCharacter{
         Pair start = new Pair(16, 16);
         pixels.add(start);
         eaten = false;
+        dir = null;
     }
 
-    public boolean move(int x, int y) {
+    public boolean move() {
+        switch(dir) {
+            case RIGHT:
+                x++;
+                if(x >= 32) {
+                    x = 0;
+                }
+                break;
+            case LEFT:
+                x--;
+                if(x < 0) {
+                    x = 31;
+                }
+                break;
+            case UP:
+                y--;
+                if(y < 0) {
+                    y = 31;
+                }
+                break;
+            case DOWN:
+                y++;
+                if(y >= 32) {
+                    y = 0;
+                }
+                break;
+        }
         Pair p = new Pair(x, y);
         if(!eaten) {
             pixels.remove(pixels.size() - 1);
@@ -43,5 +78,9 @@ public class SnakeCharacter extends GameCharacter{
         } else {
             return false;
         }
+    }
+
+    public void setDirection(Direction direction) {
+        dir = direction;
     }
 }
