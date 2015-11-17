@@ -1,18 +1,25 @@
 package com.example.tommy.cpre388game2;
 
+import java.util.ArrayList;
+
 /**
  * Created by tommysch on 11/10/2015.
  */
-public class GameCharacter {
-    int x;
-    int y;
-    int width;
-    int height;
+public abstract class GameCharacter {
 
-    public GameCharacter(int x, int y, int width, int height) {
+    int x, y;
+    int r, g, b;
+
+    public GameCharacter(int x, int y, int r, int g, int b) {
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
+        this.r = r;
+        this.g = g;
+        this.b = b;
     }
+
+    public abstract ArrayList<Pair> drawToBoard();
+
+    public abstract boolean move(int x, int y);
+
 }

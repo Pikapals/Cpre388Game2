@@ -19,17 +19,23 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
 
 
 public class MainActivity extends Activity {
     // TAG is used to debug in Android logcat console
 
-    public GameCharacter main = null;
+    private static final Pair[] bitmap = {};
+
+    public SnakeCharacter main = null;
+    public AppleObject apple = null;
 
     public static final int PAINT = 0;
     public static final int ERASE = 1;
     public static final int LOAD = 2;
 
+    private Random r;
     private static final String TAG = "MainGameScreen";
 
     private static final String ACTION_USB_PERMISSION = "com.google.android.DemoKit.action.USB_PERMISSION";
@@ -103,7 +109,9 @@ public class MainActivity extends Activity {
         filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
         registerReceiver(mUsbReceiver, filter);
         setContentView(R.layout.activity_main);
-
+        r = new Random();
+        main = new SnakeCharacter();
+        apple = new AppleObject(r.nextInt(31), r.nextInt(31));
     }
 
     @Override
@@ -149,10 +157,13 @@ public class MainActivity extends Activity {
         } else {
             Log.d(TAG, "mAccessory is null");
         }
+        drawToBoard(main);
+        drawToBoard(apple);
     }
 
     @Override
     public void onPause() {
+        eraseBoard();
         super.onPause();
         closeAccessory();
     }
@@ -164,53 +175,101 @@ public class MainActivity extends Activity {
     }
 
     public void moveDown(View v) {
-        if(main == null) {
-            main = new GameCharacter(15, 15, 1, 1);
-        }
+        eraseBoard();
         main.y += 1;
+        if(main.y >= 32) {
+            main.y = 0;
+        }
+        if(main.move(main.x, main.y)) {
+
+        }
+        if(main.checkApple(apple)) {
+            apple = new AppleObject(r.nextInt(31), r.nextInt(31));
+        }
         drawToBoard(main);
+        drawToBoard(apple);
     }
 
     public void moveUp(View v) {
-        if(main == null) {
-            main = new GameCharacter(15, 15, 1, 1);
-        }
+        eraseBoard();
         main.y -= 1;
+        if(main.y < 0) {
+            main.y = 31;
+        }
+        if(main.move(main.x, main.y)) {
+
+        }
+        if(main.checkApple(apple)) {
+            apple = new AppleObject(r.nextInt(31), r.nextInt(31));
+        }
         drawToBoard(main);
+        drawToBoard(apple);
     }
 
     public void moveLeft(View v) {
-        if(main == null) {
-            main = new GameCharacter(15, 15, 1, 1);
-        }
+        eraseBoard();
         main.x -= 1;
+        if(main.x < 0) {
+            main.x = 31;
+        }
+        if(main.move(main.x, main.y)) {
+
+        }
+        if(main.checkApple(apple)) {
+            apple = new AppleObject(r.nextInt(31), r.nextInt(31));
+        }
         drawToBoard(main);
+        drawToBoard(apple);
     }
 
     public void moveRight(View v) {
-        if(main == null) {
-            main = new GameCharacter(15, 15, 1, 1);
-        }
+        eraseBoard();
         main.x += 1;
+        if(main.x >= 32) {
+            main.x = 0;
+        }
+        if(main.move(main.x, main.y)) {
+
+        }
+        if(main.checkApple(apple)) {
+            apple = new AppleObject(r.nextInt(31), r.nextInt(31));
+        }
         drawToBoard(main);
+        drawToBoard(apple);
     }
 
+    /**
+     * Create a Runnable startTimer that makes timer runnable.
+     */
+    private Runnable startTimer = new Runnable() {
+        public void run() {
+
+            //TODO
+            /*time += REFRESH_RATE;
+            updateTimer(time);
+            mHandler.postDelayed(startTimer, REFRESH_RATE);*/
+
+        }
+    };
+
     public void drawToBoard(GameCharacter gc) {
-        eraseBoard();
+        ArrayList<Pair> pixels = gc.drawToBoard();
 
-        byte[] msg = new byte[6];
-        msg[0] = PAINT;
-        msg[1] = Byte.parseByte(((Integer) gc.x).toString());
-        msg[2] = Byte.parseByte(((Integer) gc.y).toString());
-        msg[3] = Byte.parseByte(((Integer) 1).toString());
-        msg[4] = Byte.parseByte(((Integer) 0).toString());
-        msg[5] = Byte.parseByte(((Integer) 0).toString());
+        for(Pair pixel : pixels) {
+            byte[] msg = new byte[6];
+            msg[0] = PAINT;
+            msg[1] = Byte.parseByte(((Integer) pixel.x).toString());
+            msg[2] = Byte.parseByte(((Integer) pixel.y).toString());
+            msg[3] = Byte.parseByte(((Integer) gc.r).toString());
+            msg[4] = Byte.parseByte(((Integer) gc.g).toString());
+            msg[5] = Byte.parseByte(((Integer) gc.b).toString());
 
-        if (mOutputStream != null) {
-            try {
-                mOutputStream.write(msg);
-            } catch (IOException e) {
-                Log.e(TAG, "write failed", e);
+            if (mOutputStream != null) {
+                try {
+                    mOutputStream.write(msg);
+                } catch (IOException e) {
+                    Log.e(TAG, "write failed", e);
+                }
             }
         }
     }
