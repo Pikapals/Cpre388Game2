@@ -26,7 +26,11 @@ import java.util.Random;
 public class MainActivity extends Activity {
     // TAG is used to debug in Android logcat console
 
-    private static final Pair[] bitmap = {};
+    private static final Pair[] bitmap = {new Pair(0, 0), new Pair(1, 0), new Pair(2, 0), new Pair(3, 0), new Pair(4, 0), new Pair(0, 1), new Pair(0, 2), new Pair(0, 3), new Pair(0, 4), new Pair(1, 4), new Pair(2, 4), new Pair(3, 4), new Pair(4, 4), new Pair(4, 3), new Pair(4, 2), new Pair(3, 2), new Pair(2, 2),
+        new Pair(6, 0), new Pair(6, 1), new Pair(6, 2), new Pair(6, 3), new Pair(6, 4), new Pair(7, 0), new Pair(8, 0), new Pair(9, 0), new Pair(10, 0), new Pair(10, 1), new Pair(10, 2), new Pair(10, 3), new Pair(10, 4), new Pair(7, 2), new Pair(8, 2), new Pair(9, 2),
+        new Pair(12, 0), new Pair(12, 1), new Pair(12, 2), new Pair(12, 3), new Pair(12, 4), new Pair(13,1), new Pair(14,2), new Pair(14,1), new Pair(15, 0), new Pair(15, 1), new Pair(15, 2), new Pair(15, 3), new Pair(15, 4),
+        new Pair(17, 0), new Pair(18, 0), new Pair(19, 0), new Pair(20, 0), new Pair(21, 0), new Pair(17, 1), new Pair(17, 2), new Pair(18, 2), new Pair(19, 2), new Pair(20, 2), new Pair(21, 2), new Pair(17, 3), new Pair(17, 4), new Pair(18, 4), new Pair(19, 4), new Pair(20, 4), new Pair(21, 4)};
+    //new Pair(12, 0), new Pair(12, 1), new Pair(12, 2), new Pair(12, 3), new Pair(12, 4), new Pair(13, 0), new Pair(14, 0), new Pair(15, 0), new Pair(16, 0), new Pair(16, 1), new Pair(16, 2), new Pair(16, 3), new Pair(16, 4), new Pair(13,4), new Pair(14, 4), new Pair(15, 4)
 
     public SnakeCharacter main = null;
     public AppleObject apple = null;
