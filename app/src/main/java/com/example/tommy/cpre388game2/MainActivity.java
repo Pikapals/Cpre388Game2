@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.hardware.usb.UsbAccessory;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.view.Menu;
@@ -26,14 +27,20 @@ import java.util.Random;
 public class MainActivity extends Activity {
     // TAG is used to debug in Android logcat console
 
+<<<<<<< HEAD
     private static final Pair[] bitmap = {new Pair(0, 0), new Pair(1, 0), new Pair(2, 0), new Pair(3, 0), new Pair(4, 0), new Pair(0, 1), new Pair(0, 2), new Pair(0, 3), new Pair(0, 4), new Pair(1, 4), new Pair(2, 4), new Pair(3, 4), new Pair(4, 4), new Pair(4, 3), new Pair(4, 2), new Pair(3, 2), new Pair(2, 2),
         new Pair(6, 0), new Pair(6, 1), new Pair(6, 2), new Pair(6, 3), new Pair(6, 4), new Pair(7, 0), new Pair(8, 0), new Pair(9, 0), new Pair(10, 0), new Pair(10, 1), new Pair(10, 2), new Pair(10, 3), new Pair(10, 4), new Pair(7, 2), new Pair(8, 2), new Pair(9, 2),
         new Pair(12, 0), new Pair(12, 1), new Pair(12, 2), new Pair(12, 3), new Pair(12, 4), new Pair(13,1), new Pair(14,2), new Pair(14,1), new Pair(15, 0), new Pair(15, 1), new Pair(15, 2), new Pair(15, 3), new Pair(15, 4),
         new Pair(17, 0), new Pair(18, 0), new Pair(19, 0), new Pair(20, 0), new Pair(21, 0), new Pair(17, 1), new Pair(17, 2), new Pair(18, 2), new Pair(19, 2), new Pair(20, 2), new Pair(21, 2), new Pair(17, 3), new Pair(17, 4), new Pair(18, 4), new Pair(19, 4), new Pair(20, 4), new Pair(21, 4)};
     //new Pair(12, 0), new Pair(12, 1), new Pair(12, 2), new Pair(12, 3), new Pair(12, 4), new Pair(13, 0), new Pair(14, 0), new Pair(15, 0), new Pair(16, 0), new Pair(16, 1), new Pair(16, 2), new Pair(16, 3), new Pair(16, 4), new Pair(13,4), new Pair(14, 4), new Pair(15, 4)
+=======
+    private static final Pair[] bitmap = {};
+    private static final int REFRESH_RATE = 500;
+>>>>>>> origin/master
 
     public SnakeCharacter main = null;
     public AppleObject apple = null;
+    private Handler mHandler = new Handler();
 
     public static final int PAINT = 0;
     public static final int ERASE = 1;
@@ -167,8 +174,8 @@ public class MainActivity extends Activity {
 
     @Override
     public void onPause() {
-        eraseBoard();
         super.onPause();
+        eraseBoard();
         closeAccessory();
     }
 
@@ -179,60 +186,32 @@ public class MainActivity extends Activity {
     }
 
     public void moveDown(View v) {
-        eraseBoard();
-        main.y += 1;
-        if(main.y >= 32) {
-            main.y = 0;
-        }
-        if(main.move(main.x, main.y)) {
-
-        }
-        if(main.checkApple(apple)) {
-            apple = new AppleObject(r.nextInt(31), r.nextInt(31));
-        }
-        drawToBoard(main);
-        drawToBoard(apple);
+        mHandler.removeCallbacks(frameUpdate);
+        mHandler.post(frameUpdate);
+        main.setDirection(SnakeCharacter.Direction.DOWN);
     }
 
     public void moveUp(View v) {
-        eraseBoard();
-        main.y -= 1;
-        if(main.y < 0) {
-            main.y = 31;
-        }
-        if(main.move(main.x, main.y)) {
-
-        }
-        if(main.checkApple(apple)) {
-            apple = new AppleObject(r.nextInt(31), r.nextInt(31));
-        }
-        drawToBoard(main);
-        drawToBoard(apple);
+        mHandler.removeCallbacks(frameUpdate);
+        mHandler.post(frameUpdate);
+        main.setDirection(SnakeCharacter.Direction.UP);
     }
 
     public void moveLeft(View v) {
-        eraseBoard();
-        main.x -= 1;
-        if(main.x < 0) {
-            main.x = 31;
-        }
-        if(main.move(main.x, main.y)) {
-
-        }
-        if(main.checkApple(apple)) {
-            apple = new AppleObject(r.nextInt(31), r.nextInt(31));
-        }
-        drawToBoard(main);
-        drawToBoard(apple);
+        mHandler.removeCallbacks(frameUpdate);
+        mHandler.post(frameUpdate);
+        main.setDirection(SnakeCharacter.Direction.LEFT);
     }
 
     public void moveRight(View v) {
+        mHandler.removeCallbacks(frameUpdate);
+        mHandler.post(frameUpdate);
+        main.setDirection(SnakeCharacter.Direction.RIGHT);
+    }
+
+    public void moveMain() {
         eraseBoard();
-        main.x += 1;
-        if(main.x >= 32) {
-            main.x = 0;
-        }
-        if(main.move(main.x, main.y)) {
+        if(main.move()) {
 
         }
         if(main.checkApple(apple)) {
@@ -240,18 +219,17 @@ public class MainActivity extends Activity {
         }
         drawToBoard(main);
         drawToBoard(apple);
+
     }
 
     /**
      * Create a Runnable startTimer that makes timer runnable.
      */
-    private Runnable startTimer = new Runnable() {
+    private Runnable frameUpdate = new Runnable() {
         public void run() {
 
-            //TODO
-            /*time += REFRESH_RATE;
-            updateTimer(time);
-            mHandler.postDelayed(startTimer, REFRESH_RATE);*/
+            moveMain();
+            mHandler.postDelayed(frameUpdate, REFRESH_RATE);
 
         }
     };
