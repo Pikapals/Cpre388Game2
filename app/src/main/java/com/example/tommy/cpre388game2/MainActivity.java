@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -205,13 +206,15 @@ public class MainActivity extends Activity {
         eraseBoard();
         if(main.move()) {
 
+        } else {
+            if(main.checkApple(apple)) {
+                TextView scoreText = (TextView) findViewById(R.id.scoreText);
+                scoreText.setText("Score: " + main.getScore());
+                apple = new AppleObject(r.nextInt(31), r.nextInt(31));
+            }
+            drawToBoard(main);
+            drawToBoard(apple);
         }
-        if(main.checkApple(apple)) {
-            apple = new AppleObject(r.nextInt(31), r.nextInt(31));
-        }
-        drawToBoard(main);
-        drawToBoard(apple);
-
     }
 
     /**

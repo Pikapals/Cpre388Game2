@@ -9,6 +9,7 @@ public class SnakeCharacter extends GameCharacter{
     ArrayList<Pair> pixels;
     private boolean eaten;
     private Direction dir;
+    private int score;
 
     public enum Direction {
         UP,
@@ -24,6 +25,7 @@ public class SnakeCharacter extends GameCharacter{
         pixels.add(start);
         eaten = false;
         dir = null;
+        score = 0;
     }
 
     public boolean move() {
@@ -74,6 +76,7 @@ public class SnakeCharacter extends GameCharacter{
         Pair p = pixels.get(0);
         if(p.x == apple.x && p.y == apple.y) {
             eaten = true;
+            score++;
             return true;
         } else {
             return false;
@@ -83,4 +86,6 @@ public class SnakeCharacter extends GameCharacter{
     public void setDirection(Direction direction) {
         dir = direction;
     }
+
+    public int getScore() { return score; }
 }
