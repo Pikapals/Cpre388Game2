@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileDescriptor;
@@ -220,8 +221,8 @@ public class MainActivity extends Activity {
             gameOver();
         } else {
             if(main.checkApple(apple)) {
-               /* TextView scoreText = (TextView) findViewById(R.id.scoreText);
-                scoreText.setText("Score: " + main.getScore());*/
+                TextView scoreText = (TextView) findViewById(R.id.scoreText);
+                scoreText.setText("Score: " + main.getScore());
                 apple = new AppleObject(r.nextInt(31), r.nextInt(31));
             }
             drawToBoard(main);
