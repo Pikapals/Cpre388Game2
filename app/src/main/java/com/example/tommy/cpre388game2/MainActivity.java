@@ -38,8 +38,14 @@ public class MainActivity extends Activity {
         new Pair(6, 6), new Pair(6, 7), new Pair(7, 8), new Pair(7, 9), new Pair(8, 10), new Pair(9, 9), new Pair(9, 8), new Pair(10, 7), new Pair(10, 6),
         new Pair(12, 6), new Pair(12, 7), new Pair(12, 8), new Pair(12, 9), new Pair(12, 10), new Pair(13, 6), new Pair(14, 6), new Pair(15, 6), new Pair(16, 6), new Pair(13, 8), new Pair(14, 8), new Pair(15, 8), new Pair(16, 8), new Pair(13, 10), new Pair(14, 10), new Pair(15, 10), new Pair(16, 10),
         new Pair(18, 6), new Pair(18, 7), new Pair(18, 8), new Pair(18, 9), new Pair(18, 10), new Pair(19, 6), new Pair(20, 6), new Pair(21, 6), new Pair(22, 6), new Pair(22, 7), new Pair(22, 8), new Pair(21, 8), new Pair(20, 8), new Pair(19, 8), new Pair(20, 9), new Pair(21, 10)};
-    //new Pair(12, 0), new Pair(12, 1), new Pair(12, 2), new Pair(12, 3), new Pair(12, 4), new Pair(13, 0), new Pair(14, 0), new Pair(15, 0), new Pair(16, 0), new Pair(16, 1), new Pair(16, 2), new Pair(16, 3), new Pair(16, 4), new Pair(13,4), new Pair(14, 4), new Pair(15, 4)
 
+    private static  final Pair[] scoreMap = { new Pair(0, 21), new Pair(1, 21), new Pair(2, 21), new Pair(3, 21), new Pair(4, 21), new Pair(0, 22), new Pair(0, 23), new Pair(1, 23), new Pair(2, 23), new Pair(3, 23), new Pair(4, 23), new Pair(4, 24), new Pair(4, 25), new Pair(3, 25), new Pair(2, 25), new Pair(1, 25), new Pair(0, 25),
+            new Pair(6, 21), new Pair(7, 21), new Pair(8, 21), new Pair(9, 21), new Pair(10, 21), new Pair(6, 22), new Pair(6, 23), new Pair(6, 24), new Pair(6, 25), new Pair(7, 25), new Pair(8, 25), new Pair(9, 25), new Pair(10, 25),
+            new Pair(12, 21), new Pair(12, 22), new Pair(12, 23), new Pair(12, 24), new Pair(12, 25), new Pair(13, 21), new Pair(14, 21), new Pair(15, 21), new Pair(16, 21), new Pair(16, 22), new Pair(16, 23), new Pair(16, 24), new Pair(16, 25), new Pair(13, 25), new Pair(14, 25), new Pair(15, 25),
+            new Pair(18, 21), new Pair(18, 22), new Pair(18, 23), new Pair(18, 24), new Pair(18, 25), new Pair(19, 21), new Pair(20, 21), new Pair(21, 21), new Pair(22, 21), new Pair(22, 22), new Pair(22, 23), new Pair(21, 23), new Pair(20, 23), new Pair(19, 23), new Pair(20, 24), new Pair(21, 25),
+            new Pair(20, 21), new Pair(21, 21), new Pair(22, 21), new Pair(23, 21), new Pair(24, 21), new Pair(20, 22), new Pair(20, 23), new Pair(21, 23), new Pair(22, 23), new Pair(23, 23), new Pair(24, 23), new Pair(20, 24), new Pair(20, 25), new Pair(21, 25), new Pair(22, 25), new Pair(23, 25), new Pair(24, 25),
+            new Pair(26, 21), new Pair(27, 21), new Pair(26, 22), new Pair(27, 22), new Pair(26, 24), new Pair(27, 24), new Pair(26, 25), new Pair(27, 25)
+    };
     private static final int REFRESH_RATE = 500;
 
 
