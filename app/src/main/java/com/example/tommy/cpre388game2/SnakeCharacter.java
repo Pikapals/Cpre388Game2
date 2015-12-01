@@ -61,7 +61,7 @@ public class SnakeCharacter extends GameCharacter{
         } else {
             eaten = false;
         }
-        if(pixels.contains(p)) {
+        if(collision(p)) {
             return true;
         }
         pixels.add(0, p);
@@ -88,4 +88,13 @@ public class SnakeCharacter extends GameCharacter{
     }
 
     public int getScore() { return score; }
+
+    public boolean collision(Pair p) {
+        for(Pair pixel : pixels) {
+            if(p.x == pixel.x && p.y == pixel.y) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -15,7 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -216,12 +216,13 @@ public class MainActivity extends Activity {
     public void moveMain() {
         eraseBoard();
         if(main.move()) {
-
+            Toast.makeText(this, "Game over", Toast.LENGTH_SHORT).show();
+            gameOver();
         } else {
             if(main.checkApple(apple)) {
                /* TextView scoreText = (TextView) findViewById(R.id.scoreText);
-                scoreText.setText("Score: " + main.getScore());
-                apple = new AppleObject(r.nextInt(31), r.nextInt(31));*/
+                scoreText.setText("Score: " + main.getScore());*/
+                apple = new AppleObject(r.nextInt(31), r.nextInt(31));
             }
             drawToBoard(main);
             drawToBoard(apple);
@@ -234,8 +235,8 @@ public class MainActivity extends Activity {
     private Runnable frameUpdate = new Runnable() {
         public void run() {
 
-            moveMain();
             mHandler.postDelayed(frameUpdate, REFRESH_RATE);
+            moveMain();
 
         }
     };
@@ -271,6 +272,27 @@ public class MainActivity extends Activity {
                 mOutputStream.write(msg);
             } catch (IOException e) {
                 Log.e(TAG, "write failed", e);
+            }
+        }
+    }
+
+    public void gameOver() {
+        mHandler.removeCallbacks(frameUpdate);
+        for(Pair pixel : bitmap) {
+            byte[] msg = new byte[6];
+            msg[0] = PAINT;
+            msg[1] = Byte.parseByte(((Integer) pixel.x).toString());
+            msg[2] = Byte.parseByte(((Integer) pixel.y).toString());
+            msg[3] = Byte.parseByte(((Integer) 1).toString());
+            msg[4] = Byte.parseByte(((Integer) 0).toString());
+            msg[5] = Byte.parseByte(((Integer) 0).toString());
+
+            if (mOutputStream != null) {
+                try {
+                    mOutputStream.write(msg);
+                } catch (IOException e) {
+                    Log.e(TAG, "write failed", e);
+                }
             }
         }
     }
