@@ -191,6 +191,18 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        saveGame(savedInstanceState);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        loadGame(savedInstanceState);
+    }
+
+    @Override
     public void onDestroy() {
         unregisterReceiver(mUsbReceiver);
         super.onDestroy();
@@ -302,5 +314,15 @@ public class MainActivity extends Activity {
                 }
             }
         }
+    }
+
+    public void saveGame(Bundle save) {
+        save.putParcelable("Main", main);
+        save.putParcelable("Apple", apple);
+    }
+
+    public void loadGame(Bundle load) {
+        main = load.getParcelable("Main");
+        apple = load.getParcelable("Apple");
     }
 }
