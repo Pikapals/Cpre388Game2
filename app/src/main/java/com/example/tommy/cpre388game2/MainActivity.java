@@ -302,5 +302,22 @@ public class MainActivity extends Activity {
                 }
             }
         }
+        for(Pair pixel : scoreMap) {
+            byte[] msg = new byte[6];
+            msg[0] = PAINT;
+            msg[1] = Byte.parseByte(((Integer) pixel.x).toString());
+            msg[2] = Byte.parseByte(((Integer) pixel.y).toString());
+            msg[3] = Byte.parseByte(((Integer) 1).toString());
+            msg[4] = Byte.parseByte(((Integer) 0).toString());
+            msg[5] = Byte.parseByte(((Integer) 0).toString());
+
+            if (mOutputStream != null) {
+                try {
+                    mOutputStream.write(msg);
+                } catch (IOException e) {
+                    Log.e(TAG, "write failed", e);
+                }
+            }
+        }
     }
 }
