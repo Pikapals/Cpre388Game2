@@ -3,9 +3,12 @@ package com.example.tommy.cpre388game2;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.hardware.usb.UsbAccessory;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +33,8 @@ import java.util.Random;
 public class MainActivity extends Activity {
     // TAG is used to debug in Android logcat console
 
+    private String[] allColumns = { SQLiteHelper.COLUMN_ID,
+            SQLiteHelper.COLUMN_SCORE, };
 
     private static final Pair[] bitmap = {new Pair(0, 0), new Pair(1, 0), new Pair(2, 0), new Pair(3, 0), new Pair(4, 0), new Pair(0, 1), new Pair(0, 2), new Pair(0, 3), new Pair(0, 4), new Pair(1, 4), new Pair(2, 4), new Pair(3, 4), new Pair(4, 4), new Pair(4, 3), new Pair(4, 2), new Pair(3, 2), new Pair(2, 2),
         new Pair(6, 0), new Pair(6, 1), new Pair(6, 2), new Pair(6, 3), new Pair(6, 4), new Pair(7, 0), new Pair(8, 0), new Pair(9, 0), new Pair(10, 0), new Pair(10, 1), new Pair(10, 2), new Pair(10, 3), new Pair(10, 4), new Pair(7, 2), new Pair(8, 2), new Pair(9, 2),
@@ -57,8 +63,15 @@ public class MainActivity extends Activity {
     public static final int ERASE = 1;
     public static final int LOAD = 2;
 
+    private boolean gameStart;
+
+    public int highScore;
+
     private Random r;
     private static final String TAG = "MainGameScreen";
+
+    private SQLiteDatabase database;
+    private SQLiteHelper dbHelper;
 
     private static final String ACTION_USB_PERMISSION = "com.google.android.DemoKit.action.USB_PERMISSION";
 
@@ -125,6 +138,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbHelper = new SQLiteHelper(this);
         mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
         mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
@@ -132,8 +146,11 @@ public class MainActivity extends Activity {
         registerReceiver(mUsbReceiver, filter);
         setContentView(R.layout.activity_main);
         r = new Random();
-        main = new SnakeCharacter();
-        apple = new AppleObject(r.nextInt(31), r.nextInt(31));
+        if(savedInstanceState != null && gameStart) {
+            loadGame(savedInstanceState);
+        } else {
+            gameStart = false;
+        }
     }
 
     @Override
@@ -158,6 +175,10 @@ public class MainActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
+        database = dbHelper.getWritableDatabase();
+        highScore = getHighScore().getHighScore();
+        TextView highScoreText = (TextView)findViewById(R.id.highscoreText);
+        highScoreText.setText("High score: " + highScore);
 
         if (mInputStream != null && mOutputStream != null) {
             return;
@@ -179,14 +200,18 @@ public class MainActivity extends Activity {
         } else {
             Log.d(TAG, "mAccessory is null");
         }
-        drawToBoard(main);
-        drawToBoard(apple);
+
+        if(gameStart) {
+            drawToBoard(main);
+            drawToBoard(apple);
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
         eraseBoard();
+        dbHelper.close();
         closeAccessory();
     }
 
@@ -209,27 +234,35 @@ public class MainActivity extends Activity {
     }
 
     public void moveDown(View v) {
-        mHandler.removeCallbacks(frameUpdate);
-        mHandler.post(frameUpdate);
-        main.setDirection(SnakeCharacter.Direction.DOWN);
+        if(gameStart) {
+            mHandler.removeCallbacks(frameUpdate);
+            mHandler.post(frameUpdate);
+            main.setDirection(SnakeCharacter.Direction.DOWN);
+        }
     }
 
     public void moveUp(View v) {
-        mHandler.removeCallbacks(frameUpdate);
-        mHandler.post(frameUpdate);
-        main.setDirection(SnakeCharacter.Direction.UP);
+        if(gameStart) {
+            mHandler.removeCallbacks(frameUpdate);
+            mHandler.post(frameUpdate);
+            main.setDirection(SnakeCharacter.Direction.UP);
+        }
     }
 
     public void moveLeft(View v) {
-        mHandler.removeCallbacks(frameUpdate);
-        mHandler.post(frameUpdate);
-        main.setDirection(SnakeCharacter.Direction.LEFT);
+        if(gameStart) {
+            mHandler.removeCallbacks(frameUpdate);
+            mHandler.post(frameUpdate);
+            main.setDirection(SnakeCharacter.Direction.LEFT);
+        }
     }
 
     public void moveRight(View v) {
-        mHandler.removeCallbacks(frameUpdate);
-        mHandler.post(frameUpdate);
-        main.setDirection(SnakeCharacter.Direction.RIGHT);
+        if(gameStart) {
+            mHandler.removeCallbacks(frameUpdate);
+            mHandler.post(frameUpdate);
+            main.setDirection(SnakeCharacter.Direction.RIGHT);
+        }
     }
 
     public void moveMain() {
@@ -241,7 +274,12 @@ public class MainActivity extends Activity {
             if(main.checkApple(apple)) {
                 TextView scoreText = (TextView) findViewById(R.id.scoreText);
                 scoreText.setText("Score: " + main.getScore());
+                if(main.getScore() > highScore) {
+                    TextView highScoreText = (TextView)findViewById(R.id.highscoreText);
+                    highScoreText.setText("High score: " + main.getScore());
+                }
                 apple = new AppleObject(r.nextInt(31), r.nextInt(31));
+                Toast.makeText(this, "Apple at x: " + apple.x + " y: " + apple.y, Toast.LENGTH_SHORT).show();
             }
             drawToBoard(main);
             drawToBoard(apple);
@@ -259,6 +297,17 @@ public class MainActivity extends Activity {
 
         }
     };
+
+    public void startGame(View v) {
+        gameStart = true;
+        Button newGameButton = (Button)findViewById(R.id.newGame);
+        newGameButton.setVisibility(View.GONE);
+        main = new SnakeCharacter();
+        apple = new AppleObject(r.nextInt(31), r.nextInt(31));
+        eraseBoard();
+        drawToBoard(main);
+        drawToBoard(apple);
+    }
 
     public void drawToBoard(GameCharacter gc) {
         ArrayList<Pair> pixels = gc.drawToBoard();
@@ -297,6 +346,9 @@ public class MainActivity extends Activity {
 
     public void gameOver() {
         mHandler.removeCallbacks(frameUpdate);
+        gameStart = false;
+        Button newGameButton = (Button)findViewById(R.id.newGame);
+        newGameButton.setVisibility(View.VISIBLE);
         for(Pair pixel : bitmap) {
             byte[] msg = new byte[6];
             msg[0] = PAINT;
@@ -331,15 +383,98 @@ public class MainActivity extends Activity {
                 }
             }
         }
+
+        if(main.getScore() > highScore) {
+            sendScore(main.getScore());
+            highScore = main.getScore();
+        }
     }
 
     public void saveGame(Bundle save) {
-        save.putParcelable("Main", main);
-        save.putParcelable("Apple", apple);
+        if(gameStart) {
+            save.putParcelable("Main", main);
+            save.putParcelable("Apple", apple);
+        }
     }
 
     public void loadGame(Bundle load) {
-        main = load.getParcelable("Main");
-        apple = load.getParcelable("Apple");
+        if(gameStart) {
+            mHandler.removeCallbacks(frameUpdate);
+            main = load.getParcelable("Main");
+            apple = load.getParcelable("Apple");
+            mHandler.post(frameUpdate);
+        }
+    }
+    public Event sendScore(int score) {
+
+        // Put keys (row columns) and values (parameters) into ContentValues object
+
+        ContentValues values = new ContentValues();
+        values.put(SQLiteHelper.COLUMN_SCORE, score);
+
+        // Insert ContentValues into row in events table and obtain row ID
+        // HINT: database.insert(...) returns the id of the row you insert
+        long id = database.insert(SQLiteHelper.TABLE_EVENTS, null, values);
+
+        // Query database for event row just added using the getEvent(...) method
+        // NOTE: You need to write a query to get an event by id at the to-do marker
+        //		 in the getEvent(...) method
+        Event newEvent = getEvent(id);
+
+        return newEvent;
+    }
+
+    public void deleteEvent(Event event) {
+        long id = event.getId();
+        String id_string = "" + id;
+        database.delete(SQLiteHelper.TABLE_EVENTS, "?=?", new String[]{SQLiteHelper.COLUMN_ID, id_string});
+    }
+
+    /**
+     * Queries and returns event based on ID
+     * @param id
+     * ID of event to return
+     * @return
+     * Event with ID "id"
+     */
+    public Event getEvent(long id) {
+        Cursor cursor = null;
+
+        // TODO: Create query for single event here
+
+        cursor = database.query(SQLiteHelper.TABLE_EVENTS, allColumns, SQLiteHelper.COLUMN_ID + "=" + id, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        Event toReturn = cursorToEvent(cursor);
+        cursor.close();
+        return toReturn;
+    }
+
+    private Event cursorToEvent(Cursor cursor) {
+        Event event = new Event();
+
+        // TODO: Fill event object with data from Cursor
+        event.setId(cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_ID)));
+        event.setHighScore(cursor.getInt(cursor.getColumnIndex(SQLiteHelper.COLUMN_SCORE)));
+
+        return event;
+    }
+
+    public Event getHighScore() {
+
+        Cursor cursor = null;
+        cursor = database.query(SQLiteHelper.TABLE_EVENTS, allColumns, null, null, null, null, null, null);
+
+        Event high = new Event(-1, 0);
+        cursor.moveToFirst();
+        while(cursor != null && !cursor.isAfterLast()) {
+            Event check = cursorToEvent(cursor);
+            if(check.getHighScore() > high.getHighScore()) {
+                high = check;
+            }
+            cursor.moveToNext();
+        }
+
+        return high;
     }
 }

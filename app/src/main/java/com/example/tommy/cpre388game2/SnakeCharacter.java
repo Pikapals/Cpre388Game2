@@ -18,7 +18,8 @@ public class SnakeCharacter extends GameCharacter implements Parcelable {
         UP,
         DOWN,
         LEFT,
-        RIGHT
+        RIGHT,
+        STOPPED
     }
 
     public SnakeCharacter() {
@@ -27,7 +28,7 @@ public class SnakeCharacter extends GameCharacter implements Parcelable {
         Pair start = new Pair(16, 16);
         pixels.add(start);
         eaten = false;
-        dir = null;
+        dir = Direction.STOPPED;
         score = 0;
     }
 
@@ -47,6 +48,9 @@ public class SnakeCharacter extends GameCharacter implements Parcelable {
                 break;
             case 3:
                 dir = Direction.RIGHT;
+                break;
+            case 4:
+                dir = Direction.STOPPED;
                 break;
         }
         score = in.readInt();
@@ -79,6 +83,8 @@ public class SnakeCharacter extends GameCharacter implements Parcelable {
                     y = 0;
                 }
                 break;
+            case STOPPED:
+                return false;
         }
         Pair p = new Pair(x, y);
         if(!eaten) {
@@ -133,17 +139,19 @@ public class SnakeCharacter extends GameCharacter implements Parcelable {
         out.writeList(pixels);
         switch(dir) {
             case UP:
-                out.writeInt(1);
+                out.writeInt(0);
                 break;
             case DOWN:
-                out.writeInt(2);
+                out.writeInt(1);
                 break;
             case LEFT:
-                out.writeInt(3);
+                out.writeInt(2);
                 break;
             case RIGHT:
-                out.writeInt(4);
+                out.writeInt(3);
                 break;
+            case STOPPED:
+                out.writeInt(4);
         }
         out.writeInt(score);
     }
