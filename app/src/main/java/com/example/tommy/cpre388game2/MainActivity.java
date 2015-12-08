@@ -22,8 +22,11 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
+
 
 
 public class MainActivity extends Activity {
@@ -43,9 +46,23 @@ public class MainActivity extends Activity {
             new Pair(6, 21), new Pair(7, 21), new Pair(8, 21), new Pair(9, 21), new Pair(10, 21), new Pair(6, 22), new Pair(6, 23), new Pair(6, 24), new Pair(6, 25), new Pair(7, 25), new Pair(8, 25), new Pair(9, 25), new Pair(10, 25),
             new Pair(12, 21), new Pair(12, 22), new Pair(12, 23), new Pair(12, 24), new Pair(12, 25), new Pair(13, 21), new Pair(14, 21), new Pair(15, 21), new Pair(16, 21), new Pair(16, 22), new Pair(16, 23), new Pair(16, 24), new Pair(16, 25), new Pair(13, 25), new Pair(14, 25), new Pair(15, 25),
             new Pair(18, 21), new Pair(18, 22), new Pair(18, 23), new Pair(18, 24), new Pair(18, 25), new Pair(19, 21), new Pair(20, 21), new Pair(21, 21), new Pair(22, 21), new Pair(22, 22), new Pair(22, 23), new Pair(21, 23), new Pair(20, 23), new Pair(19, 23), new Pair(20, 24), new Pair(21, 25),
-            new Pair(20, 21), new Pair(21, 21), new Pair(22, 21), new Pair(23, 21), new Pair(24, 21), new Pair(20, 22), new Pair(20, 23), new Pair(21, 23), new Pair(22, 23), new Pair(23, 23), new Pair(24, 23), new Pair(20, 24), new Pair(20, 25), new Pair(21, 25), new Pair(22, 25), new Pair(23, 25), new Pair(24, 25),
-            new Pair(26, 21), new Pair(27, 21), new Pair(26, 22), new Pair(27, 22), new Pair(26, 24), new Pair(27, 24), new Pair(26, 25), new Pair(27, 25)
+            new Pair(24, 21), new Pair(25, 21), new Pair(26, 21), new Pair(27, 21), new Pair(28, 21), new Pair(24, 22), new Pair(24, 23), new Pair(25, 23), new Pair(26, 23), new Pair(27, 23), new Pair(28, 23), new Pair(24, 24), new Pair(24, 25), new Pair(25, 25), new Pair(26, 25), new Pair(27, 25), new Pair(28, 25),
+            new Pair(30, 21), new Pair(31, 21), new Pair(30, 22), new Pair(31, 22), new Pair(30, 24), new Pair(31, 24), new Pair(30, 25), new Pair(31, 25)
     };
+
+    private HashMap<Integer, Pair[]> numbersMap = new HashMap<Integer, Pair[]>();
+
+    private static final Pair[] numberZero = {new Pair(1, 27), new Pair(2, 27), new Pair(3, 27), new Pair(0, 28), new Pair(0, 29), new Pair(0, 30), new Pair(1, 31), new Pair(2, 31), new Pair(3, 31), new Pair(4, 28), new Pair(4, 29), new Pair(4, 30)};
+    private static final Pair[] numberOne = {new Pair(0, 27), new Pair(1, 27), new Pair(1, 28), new Pair(1, 29), new Pair(1, 30), new Pair(1, 31)};
+    private static final Pair[] numberTwo = {new Pair(0, 28), new Pair(1, 27), new Pair(2, 27), new Pair(3, 27), new Pair(4, 28), new Pair(3, 29), new Pair(2, 30), new Pair(0, 31), new Pair(1, 31), new Pair(2, 31), new Pair(3, 31), new Pair(4, 31)};
+    private static final Pair[] numberThree = {new Pair(0, 27), new Pair(1, 27), new Pair(2, 27), new Pair(3, 27), new Pair(4, 27), new Pair(4, 28), new Pair(4, 29), new Pair(3, 29), new Pair(2, 29), new Pair(1, 29), new Pair(4, 30), new Pair(4, 31), new Pair(3, 31), new Pair(2, 31), new Pair(1, 31), new Pair(0, 31)};
+    private static final Pair[] numberFour = {new Pair(0, 27), new Pair(0, 28), new Pair(0, 29), new Pair(1, 29), new Pair(2, 29), new Pair(3, 29), new Pair(4, 29), new Pair(4, 27), new Pair(4, 28), new Pair(4, 30), new Pair(4, 31)};
+    private static final Pair[] numberFive = {new Pair(4, 27), new Pair(3, 27), new Pair(2, 27), new Pair(1, 27), new Pair(0, 28), new Pair(0, 29), new Pair(1, 29), new Pair(2, 29), new Pair(3, 29), new Pair(4, 29), new Pair(4, 30), new Pair(4, 31), new Pair(3, 31), new Pair(2, 31), new Pair(1, 31), new Pair(0, 31)};
+    private static final Pair[] numberSix = {new Pair(4, 27), new Pair(3, 27), new Pair(2, 27), new Pair(1, 27), new Pair(0, 27), new Pair(0, 28), new Pair(0, 29), new Pair(1, 29), new Pair(2, 29), new Pair(3, 29), new Pair(4, 29), new Pair(4, 30), new Pair(4, 31), new Pair(3, 31), new Pair(2, 31), new Pair(1, 31), new Pair(0, 31), new Pair(0, 30)};
+    private static final Pair[] numberSeven = {new Pair(0, 27), new Pair(1, 27), new Pair(2, 27), new Pair(3, 27), new Pair(4, 27), new Pair(4, 28), new Pair(3, 29), new Pair(2, 30), new Pair(1, 31)};
+    private static final Pair[] numberEight = {new Pair(0, 27), new Pair(1, 27), new Pair(2, 27), new Pair(3, 27), new Pair(4, 27), new Pair(4, 28), new Pair(3, 29), new Pair(2, 29), new Pair(1, 29), new Pair(0, 28), new Pair(0, 30), new Pair(0, 31), new Pair(1, 31), new Pair(2, 31), new Pair(3, 31), new Pair(4, 31), new Pair(4, 30)};
+    private static final Pair[] numberNine = {new Pair(0, 27), new Pair(1, 27), new Pair(2, 27), new Pair(3, 27), new Pair(4, 27), new Pair(4, 28), new Pair(4, 29), new Pair(3, 29), new Pair(2, 29), new Pair(1, 29), new Pair(0, 29), new Pair(0, 28), new Pair(4, 30), new Pair(4, 31), new Pair(3, 31), new Pair(2, 31), new Pair(1, 31), new Pair(0, 31)};
+
     private static final int REFRESH_RATE = 500;
 
 
@@ -125,6 +142,16 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        numbersMap.put(0, numberZero);
+        numbersMap.put(1, numberOne);
+        numbersMap.put(2, numberTwo);
+        numbersMap.put(3, numberThree);
+        numbersMap.put(4, numberFour);
+        numbersMap.put(5, numberFive);
+        numbersMap.put(6, numberSix);
+        numbersMap.put(7, numberSeven);
+        numbersMap.put(8, numberEight);
+        numbersMap.put(9, numberNine);
         mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
         mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
@@ -341,5 +368,28 @@ public class MainActivity extends Activity {
     public void loadGame(Bundle load) {
         main = load.getParcelable("Main");
         apple = load.getParcelable("Apple");
+    }
+
+    private ArrayList<Pair[]> numberCombiner(int number)
+    {
+        ArrayList<Pair[]> finalScore = new ArrayList<Pair[]>();
+
+        String digits = Integer.toString(number);
+
+        for(int i = 0; i < digits.length(); i++)
+        {
+            Pair[] digit = numbersMap.get(digits.charAt(i));
+            if(i >= 1)
+            {
+                for(Pair p : digit)
+                {
+                    p.x += i*6;
+                }
+            }
+            finalScore.add(digit);
+        }
+
+        return finalScore;
+
     }
 }
